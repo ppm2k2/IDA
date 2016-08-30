@@ -1,0 +1,66 @@
+﻿@using System.Configuration;
+
+@{
+    var path = ViewContext.HttpContext.Request.Path;
+    var splitPath = path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+    var menu = splitPath.Length == 0 ? "Index" : splitPath[0];
+
+    string appName = String.Format("{0}", ConfigurationManager.AppSettings["AppType"]);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>@appName</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <link href="@Url.Content("~/Content/kendo/Q1.2016/kendo.common.min.css")" rel="stylesheet" type="text/css" />
+    <link id="kendoStyle" href="@Url.Content("~/Content/kendo/Q1.2016/kendo.moonlight.min.css")" rel="stylesheet" type="text/css" />
+
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+
+    <script src="@Url.Content("~/Scripts/kendo/Q1.2016/jquery.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/kendo/Q1.2016/kendo.all.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/Q1.2016/kendo.aspnetmvc.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/kendo/Q1.2016/jszip.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/ida.common.js")"></script>
+    <script src="@Url.Content("~/Scripts/ida.core.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/kendo.modernizr.custom.js")"></script>
+
+</head>
+<body class="k-content" style="height: 100%">
+
+    <header id="header-main">
+        <div id="header-logo">
+            <a href="/">
+                <img src="@Url.Content("~/Images/C1_Logo.png")" alt="ConceptOne, LLC" />
+            </a>
+        </div>
+        <div id="header-menu">
+            @Html.Partial("_LoginPartial")
+        </div>
+    </header>
+
+    @(Html.Kendo().Splitter().HtmlAttributes(new { style = "min-width: 1024px;" })
+                  .Name("main-splitter")
+                  .Orientation(SplitterOrientation.Horizontal)
+                  .Panes(p =>
+                  {
+                  p.Add().Collapsible(true).MaxSize("25%").MinSize("150px").Size("150px").Content(@<nav>@Html.Action(menu, "Nav")</nav>);
+                      p.Add().Collapsible(false).Content(@<main>@RenderBody()</main>).Scrollable(false);
+                  })
+    )
+
+    @(Html.Kendo().Notification()
+    .Name("popupNotification")
+            .Stacking(NotificationStackingSettings.Down)
+            .AutoHideAfter(7000)
+            .Events(e => e.Show("ida.common.onPopupNotificationShow"))
+    )
+
+</body>
+</html>

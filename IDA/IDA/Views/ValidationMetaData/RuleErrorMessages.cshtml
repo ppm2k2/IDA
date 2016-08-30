@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ModuleLayout.cshtml";
+}
+
+
+@(Html.Kendo().Grid<IDA.Models.ValidationRulesErrorMessageViewModel>()
+                            .Name("gridDetail")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(c => c.Id).Width(50).Groupable(false);
+                                columns.Bound(c => c.ColumnID).Width(100);
+                                columns.Bound(c => c.Message);
+                                columns.Bound(c => c.ValidationFormTypeIds).Width(200);
+                                columns.Command(command => command.Destroy()).Width(110);
+                            })
+                            .ToolBar(toolbar =>
+                            {
+                                toolbar.Create();
+                                toolbar.Save();
+                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                            .HtmlAttributes(new { @class = "c-content-grid", style = "width: 100%;" })
+                            .Scrollable()
+                            .Navigatable()
+                            .Filterable()
+                            .Groupable()
+                            .Sortable()
+                            .Pageable(pageable => pageable
+                                .Refresh(true)
+                                .PageSizes(true)
+                                .ButtonCount(5))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .Batch(true)
+                            .ServerOperation(false)
+                            .Events(events =>
+                            {
+                                events.Error("ida.core.onGridDetailError");
+                       
+                            })
+                    .Model(model =>
+                    {
+                        model.Id(v => v.Id);
+                        model.Field(v => v.Id).Editable(false);
+                    })
+        .Create("ValidationRulesErrorMessage_Create", "ValidationMetaData")
+        .Read("ValidationRulesErrorMessage_Read", "ValidationMetaData")
+        .Update("ValidationRulesErrorMessage_Update", "ValidationMetaData")
+        .Destroy("ValidationRulesErrorMessage_Destroy", "ValidationMetaData")
+        .PageSize(500)
+    ))

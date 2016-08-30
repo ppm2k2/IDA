@@ -1,0 +1,57 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ModuleLayout.cshtml";
+}
+
+<script>
+
+    //$(function () {
+    //    ida.common.displayMessage({ messageType: 'info', messageText: "Please note.  This page uses batch editing.  You must click 'Save changes' to commit any changes made to the grid.</br>This includes delete transactions." });
+    //});
+
+</script>
+
+@(Html.Kendo().Grid<IDA.Models.ValidationTableColumnDefViewModel>()
+                            .Name("gridDetail")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(c => c.Id).Width(50).Groupable(false);
+                                columns.Bound(c => c.TableName);
+                                columns.Bound(c => c.ColumnName);
+                                columns.Command(command => command.Destroy()).Width(110);
+                            })
+                            .ToolBar(toolbar =>
+                            {
+                                toolbar.Create();
+                                toolbar.Save();
+                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                            .HtmlAttributes(new { @class = "c-content-grid", style = "width: 800px;" })
+                            .Scrollable()
+                            .Navigatable()
+                            .Filterable()
+                            .Groupable()
+                            .Sortable()
+                            .Pageable(pageable => pageable
+                                .Refresh(true)
+                                .PageSizes(true)
+                                .ButtonCount(5))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .Batch(true)
+                            .ServerOperation(false)
+                            .Events(events => {
+                                events.Error("ida.core.onGridDetailError");
+                                //events.("ida.common.displayMessage({ messageType: 'info', messageText: 'test' })");
+                            })
+                    .Model(model => {
+                        model.Id(v => v.Id);
+                        model.Field(v => v.Id).Editable(false);
+                    })
+        .Create("ValidationTableColumnDef_Create", "ValidationMetaData")
+        .Read("ValidationTableColumnDef_Read", "ValidationMetaData")
+        .Update("ValidationTableColumnDef_Update", "ValidationMetaData")
+        .Destroy("ValidationTableColumnDef_Destroy", "ValidationMetaData")
+        .PageSize(500)
+    ))
+

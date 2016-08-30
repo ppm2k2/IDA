@@ -1,0 +1,18 @@
+﻿
+@model IDA.Models.Navigation
+
+@(Html.Kendo().PanelBar()
+    .Name("nav-menu-left")
+    .Events(events => events
+        .Select("ida.core.navMenuSelect")
+        )
+    .ExpandMode(PanelBarExpandMode.Single)
+    .Items(panelbar =>
+    {
+        panelbar.Add().Text("DEMI Home").HtmlAttributes(new { id = "/DEMI/Transformation" });
+        panelbar.Add().Text("Transformation").HtmlAttributes(new { id = "/DEMI/Transformation" });        
+    })
+)
+
+
+

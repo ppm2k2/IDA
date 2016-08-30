@@ -1,0 +1,10 @@
+Transformation Rules
+---------------------
+ID 
+ 
+Price 
+
+[[if cast(@Market_value as decimal) > 100 set @Result=cast(cast(@Market_value as decimal) / 100 as varchar); else set @Result=cast(cast(@Market_value as decimal) + cast(@Price as decimal) as varchar);]]
+
+Price * Quantity + Market_Value
+

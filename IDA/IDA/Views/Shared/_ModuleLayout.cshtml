@@ -1,0 +1,52 @@
+﻿
+@{
+    if (!ViewContext.HttpContext.Request.IsAjaxRequest())
+    {
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+}
+
+
+<div id="@ViewBag.Name.ToLower().Replace(" ", "-")" class="c-module c-block">
+
+    <div class="c-header" style="width: 100%;">
+
+        <span class="c-title">@ViewBag.Name</span>
+        <span class="c-divider"></span>
+        <a id="quick-action-link">Actions<span class="k-icon k-si-arrow-s"></span></a>
+
+
+        @(Html.Kendo().ContextMenu().Name("quick-action-menu")
+                .AlignToAnchor(true)
+                .Events(x => x.Select("ida.core.quickActionMenuOnClick"))
+                .Animation(animation =>
+                {
+                    animation.Open(open =>
+                    {                     
+                        open.Fade(FadeDirection.In);
+                    });
+                })
+                .HoverDelay(200)
+                .Items(i =>
+                {
+                    if (ViewBag.Items != null)
+                    {
+                        foreach (KeyValuePair<string, string> item in ViewBag.Items)
+                        {
+                            i.Add().Text(item.Value).HtmlAttributes(new { id = item.Key }); ;
+                        }
+                    }
+                })
+                        .Orientation(ContextMenuOrientation.Vertical)
+                        .ShowOn("mouseover")
+                        .Target("#quick-action-link"))
+
+    </div>
+
+    <div class="c-content">
+        @RenderBody()
+    </div>
+
+    <div id="window-container"></div>
+</div>
+

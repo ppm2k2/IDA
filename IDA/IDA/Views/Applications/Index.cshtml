@@ -1,0 +1,24 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ModuleLayout.cshtml";
+}
+
+@*TODO:  add dynamic ref. for appId below.*@
+
+<div class="k-content">
+    <div class="wrapper">
+        @(Html.Kendo().TabStrip()
+              .Name("appTabStrip")
+              .Items(tabstrip =>
+              {
+                  tabstrip.Add().Text("Installed Versions")
+                      .Selected(true)
+                  .LoadContentFrom(Url.Content("/Applications/InstalledVersions?appId=1"));
+
+                  tabstrip.Add().Text("Config File Comparison");
+
+                  tabstrip.Add().Text("SVN Revision Comparison");
+              })
+        )
+    </div>
+</div>

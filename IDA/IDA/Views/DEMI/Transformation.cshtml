@@ -1,0 +1,179 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ModuleLayout.cshtml";
+}
+
+<script>
+
+    var transProgress;
+   
+    $(function () {
+        window.setTimeout(ida.core.demi.initializeTransformation, 250);
+    });
+
+</script>
+
+@*<script src="//cdnjs.cloudflare.com/ajax/libs/jszip/2.4.0/jszip.min.js"></script>*@
+
+<script id="fileTemplate" type="text/x-kendo-template">
+    <span class='k-progress'></span>
+    <div class='file-wrapper'>
+        <span class='file-icon #=ida.core.demi.addExtensionClass(files[0].extension)#'></span>
+        <h3 style="line-height: none; padding-top: 1.2em; ">Name: #=name#</h3>
+        <h4 style="line-height: none;">Size: #=size# bytes</h4>
+        <button type='button' class='k-upload-action'></button>
+    </div>
+</script>
+
+<div style="margin-left: 5px; margin-right: 5px;">
+    <div style="margin-top: 5px; margin-bottom: 15px; ">
+        <div id="progress-bar">
+            <div style="display: inline-block;">Steps</div>
+            <div style="display: inline-block;">
+                @(Html.Kendo().ProgressBar()
+                          .Name("transformationProgress")
+                          .HtmlAttributes(new { style = "padding: 2px;" })
+                          .Type(ProgressBarType.Value)
+                          .Max(2)
+                          .Animation(false)
+                          .Events(e => e.Change("ida.core.demi.onTransformationChange"))
+                )
+            </div>
+        </div>
+        <div>
+            <h2 style="font-weight: normal;" id="transHeader"></h2>
+        </div>
+    </div>
+
+    <div id="transStep1" style="width: 500px;  display: table;">
+       
+         <div id="transTep1-transformationSet" style="margin-bottom: 25px;">
+            @(Html.Kendo().AutoComplete()
+                  .Name("transformationSet")
+                  .DataTextField("Name")
+                  .Filter("contains")
+                  .Placeholder("Enter Transformation Set Name...")
+                  .DataSource(source =>
+                  {
+                      source.Read(read =>
+                      {
+                          read.Action("GetTransformationSets", "DEMI").Data("ida.core.demi.onAdditionalData");
+                      })
+                      .ServerFiltering(true);
+                  })
+            )
+        </div>
+        <div id="transTep1-sourceFiles">
+            @(Html.Kendo().Upload()
+            .Name("sourceFiles")
+            .Multiple(false)
+            .Messages(m => m.Select("Select source file..."))
+            .TemplateId("fileTemplate")
+            .Events(e => e
+                .Select("ida.core.demi.onFileSelect")
+                .Remove("ida.core.demi.onFileRemove")
+                .Error("ida.core.demi.onFileSelectError"))
+            .Async(a => a
+                .Save("SaveSourceFile", "DEMI")
+                .Remove("RemoveFile", "DEMI")
+                .AutoUpload(true)
+            )
+            )
+        </div>
+        <div id="transTep1-destinationFiles">
+            @(Html.Kendo().Upload()
+            .Name("destinationFiles")
+            .Multiple(false)
+            .Messages(m => m.Select("Select destination file..."))
+            .TemplateId("fileTemplate")
+            .Events(e => e
+                .Select("ida.core.demi.onFileSelect")
+                .Remove("ida.core.demi.onFileRemove")
+                .Error("ida.core.demi.onFileSelectError"))
+            .Async(a => a
+                .Save("SaveDestinationFile", "DEMI")
+                .Remove("RemoveFile", "DEMI")
+                .AutoUpload(true)
+            )
+            )
+        </div>
+        
+    </div>
+
+    <div id="transStep2" style="width: 1000px; margin-top: 25px; display: table;">
+        <div style="display: table-row;">
+            <div id="transTep2-sourceTable" style="display: table-cell; padding-right: 15px; vertical-align: top; width: 200px;">
+                @(Html.Kendo().Grid<IDA.Models.DEMI.SourceViewModel>()
+                    .Name("sourceGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(s => s.ColumnName);
+                    })
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Read(read => read.Action("SourceGrid_Read", "DEMI").Data("ida.core.demi.getSourceGridOptions"))
+                     )
+                     .AutoBind(false)
+                )
+            </div>
+            <div id="transTep2-destinationTable" style="display: table-cell; vertical-align: top;">
+                @(Html.Kendo().Grid<IDA.Models.DEMI.TransformationViewModel>
+                    ()
+                    .Name("transformationGrid")
+                    .Columns(columns =>
+                    {
+                        columns.Bound(t => t.Id).Visible(false);
+                        columns.Bound(t => t.TransformationSetId).Visible(false);
+                        columns.Bound(t => t.TransformationRule);
+                        columns.Bound(t => t.TargetColumn).Width(200);
+                        columns.Bound(t => t.Create_Date_Time).Visible(false);
+                    })
+                    .Events(e => e.SaveChanges("ida.core.demi.onTransformationGridSave"))
+                    .ToolBar(toolbar =>
+                    {
+                        toolbar.Save();
+                    })
+                    .Editable(editable => editable.Mode(GridEditMode.InCell))
+                    .DataSource(dataSource => dataSource
+                        .Ajax()
+                        .Batch(true)
+                        .Model(model =>
+                        {
+                            model.Id(t => t.Id);
+                            model.Field(t => t.TargetColumn).Editable(false);
+                        })
+                        .Events(events => events.Error("ida.core.demi.onGridError"))
+                        .Read(read => read.Action("TransformationGrid_Read", "DEMI").Data("ida.core.demi.getTransformationGridOptions"))
+                        .Update(update => update.Action("TransformationGrid_Update", "DEMI").Data("ida.core.demi.getTransformationGridOptions"))
+                    )
+                    .AutoBind(false)
+                )
+            </div>
+        </div>
+    </div>
+
+    <div id="transStep3" style="width: 100%; margin-top: 25px;">
+
+        @(Html.Kendo().Button()
+            .Name("transFileDownload")
+            .HtmlAttributes(new { type = "button", style = "margin-left: 15px; padding: 5px 15px 5px 15px;"})
+            .Icon("note")
+            .Content("Download Transformation Results"))
+
+        @*TODO: Look to introduce in phase two.*@
+
+        @*@(Html.Kendo().Spreadsheet()
+            .Name("transformationResultsSheet")
+            //.HtmlAttributes(new { style = "width:1200px;" })
+            )*@
+
+    </div>
+
+    <div style="margin-top: 50px; margin-left: 15px;">
+        <button id="cancelButton" style="visibility: hidden; padding: 5px 15px 5px 15px;" onclick="ida.core.demi.transformationCancel(demi.stepCount=0);" class="k-button">Cancel</button>
+        <button id="previousButton" style="visibility: hidden; padding: 5px 15px 5px 15px;" onclick="ida.core.demi.transformationNextStep(demi.stepCount -= 1);" class="k-button">Previous</button>
+        <button id="nextButton" style="visibility: hidden; float: left; padding: 5px 15px 5px 15px;" onclick="ida.core.demi.transformationNextStep(demi.stepCount += 1);" class="k-button">Next Step</button>
+    </div>
+    <iframe id="fileDownloadFrame" style="display:none;"></iframe>
+
+</div>

@@ -1,0 +1,66 @@
+﻿@using System.Configuration;
+
+@{
+    string appHome = String.Format("{0} Home", ConfigurationManager.AppSettings["AppType"]);
+}
+
+@model IDA.Models.Navigation
+
+@(Html.Kendo().PanelBar()
+    .Name("nav-menu-left")
+    .Events(events => events
+        .Select("ida.core.navMenuSelect")
+        )
+    .ExpandMode(PanelBarExpandMode.Single)
+    .Items(panelbar =>
+    {
+        panelbar.Add().Text(appHome).HtmlAttributes(new { id = "/Home/Index" });
+
+        panelbar.Add().Text("Reg. Val. Metadata").HtmlAttributes(new { id = "None" })
+            .Items(items =>
+            {
+                items.Add().Text("Column Definitions").HtmlAttributes(new { id = "/ValidationMetaData/ColumnDefinitions" });
+                items.Add().Text("Form Type Mappings").HtmlAttributes(new { id = "/ValidationMetaData/FormTypeMapping" });
+                items.Add().Text("Validation Enumerations").HtmlAttributes(new { id = "/ValidationMetaData/ValidationEnumerations" });
+                items.Add().Text("Rule Error Messages").HtmlAttributes(new { id = "/ValidationMetaData/RuleErrorMessages" });
+                items.Add().Text("Validation Rules").HtmlAttributes(new { id = "/ValidationMetaData/ValidationRules" });
+                //items.Add().Text("Column Def. Mapping").HtmlAttributes(new { id = "/ValidationMetaData/ColumnDefMapping" });
+                //items.Add().Text("Column Def. Rules").HtmlAttributes(new { id = "/ValidationMetaData/ColumnDefRules" });
+            });
+        panelbar.Add().Text("Risk Report Data").HtmlAttributes(new { id = "None" })
+           .Items(items =>
+           {
+               items.Add().Text("Custom AUM").HtmlAttributes(new { id = "/RiskReportData/CustomAUM" });
+           
+           });
+        //panelbar.Add().Text("Transformation").HtmlAttributes(new { id = "/DEMI/Transformation" });
+        //panelbar.Add().Text("Applications").HtmlAttributes(new { id = "None" })
+        //   .Items(items =>
+        //   {
+        //       items.Add().Text("IDC").HtmlAttributes(new { id = "/Applications/Index?appId=1" });
+
+        //       items.Add().Text("Workbench").HtmlAttributes(new { id = "/Applications/Index?appId=2" });
+        //       items.Add().Text("COS Engine").HtmlAttributes(new { id = "/Applications/Index?appId=3" });
+        //       items.Add().Text("PAM Engine").HtmlAttributes(new { id = "/Applications/Index?appId=4" });
+        //       items.Add().Text("PAM Analyzers").HtmlAttributes(new { id = "/Applications/Index?appId=5" });
+        //       items.Add().Text("IDQ WinService").HtmlAttributes(new { id = "/Applications/Index?appId=6" });
+        //       items.Add().Text("IDQ WebService").HtmlAttributes(new { id = "/Applications/Index?appId=7" });
+        //       items.Add().Text("PADI Console").HtmlAttributes(new { id = "/Applications/Index?appId=8" });
+        //       items.Add().Text("PADI Web").HtmlAttributes(new { id = "/Applications/Index?appId=9" });
+        //   });
+        //panelbar.Add().Text("Reports").HtmlAttributes(new { id = "/Home/Index" });
+        //panelbar.Add().Text("COSE Engine").HtmlAttributes(new { id = "/Home/Index" });
+        //panelbar.Add().Text("Tools").HtmlAttributes(new { id = "/Home/Index" });
+        //panelbar.Add().Text("Tools").HtmlAttributes(new { id = "None" })
+        //   .Items(items =>
+        //   {
+        //       items.Add().Text("TeamCity").HtmlAttributes(new { id = "TeamCity" });
+        //       items.Add().Text("JIRA").HtmlAttributes(new { id = "JIRA" });
+        //       items.Add().Text("Confluence").HtmlAttributes(new { id = "Confluence" });
+        //   });
+
+    })
+)
+
+
+

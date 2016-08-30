@@ -1,0 +1,15 @@
+C:\Project\IDA\Infrastructure\bin\Debug\ConceptONE.Infrastructure.dll.config
+C:\Project\IDA\Infrastructure\bin\Debug\ConceptONE.Infrastructure.dll
+C:\Project\IDA\Infrastructure\bin\Debug\ConceptONE.Infrastructure.pdb
+C:\Project\IDA\Infrastructure\bin\Debug\BouncyCastle.CryptoExt.dll
+C:\Project\IDA\Infrastructure\bin\Debug\DidiSoft.Pgp.dll
+C:\Project\IDA\Infrastructure\bin\Debug\EntityFramework.dll
+C:\Project\IDA\Infrastructure\bin\Debug\EntityFramework.SqlServer.dll
+C:\Project\IDA\Infrastructure\bin\Debug\Org.Mentalis.Security.dll
+C:\Project\IDA\Infrastructure\bin\Debug\Tamir.SharpSSH.dll
+C:\Project\IDA\Infrastructure\bin\Debug\DidiSoft.Pgp.xml
+C:\Project\IDA\Infrastructure\bin\Debug\EntityFramework.xml
+C:\Project\IDA\Infrastructure\bin\Debug\EntityFramework.SqlServer.xml
+C:\Project\IDA\Infrastructure\obj\Debug\Infrastructure.csprojResolveAssemblyReference.cache
+C:\Project\IDA\Infrastructure\obj\Debug\ConceptONE.Infrastructure.dll
+C:\Project\IDA\Infrastructure\obj\Debug\ConceptONE.Infrastructure.pdb

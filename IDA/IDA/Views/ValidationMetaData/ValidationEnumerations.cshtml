@@ -1,0 +1,55 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_ModuleLayout.cshtml";
+}
+
+<script>
+
+</script>
+
+@(Html.Kendo().Grid<IDA.Models.ValidationEnumerationViewModel>()
+                            .Name("gridDetail")
+                            .Columns(columns =>
+                            {
+                                columns.Bound(c => c.Id).Width(100).Groupable(false);
+                                columns.Bound(c => c.ValidationEnumerationId);
+                                columns.Bound(c => c.Value);
+                                columns.Command(command => command.Destroy()).Width(110);
+                            })
+                            .ToolBar(toolbar =>
+                            {
+                                toolbar.Create();
+                                toolbar.Save();
+                            })
+                            .Editable(editable => editable.Mode(GridEditMode.InCell))
+                            .HtmlAttributes(new { @class = "c-content-grid", style = "width: 800px;" })
+                            .Scrollable()
+                            .Navigatable()
+                            .Filterable()
+                            .Groupable()
+                            .Sortable()
+                            .Pageable(pageable => pageable
+                                .Refresh(true)
+                                .PageSizes(true)
+                                .ButtonCount(5))
+                            .DataSource(dataSource => dataSource
+                            .Ajax()
+                            .Batch(true)
+                            .ServerOperation(false)
+                            .Events(events =>
+                            {
+                                events.Error("ida.core.onGridDetailError");
+                                //events.("ida.common.displayMessage({ messageType: 'info', messageText: 'test' })");
+                            })
+                    .Model(model =>
+                    {
+                        model.Id(v => v.Id);
+                        model.Field(v => v.Id).Editable(true);
+                    })
+        .Create("ValidationEnumeration_Create", "ValidationMetaData")
+        .Read("ValidationEnumeration_Read", "ValidationMetaData")
+        .Update("ValidationEnumeration_Update", "ValidationMetaData")
+        .Destroy("ValidationEnumeration_Destroy", "ValidationMetaData")
+        .PageSize(500)
+    ))
+

@@ -1,0 +1,47 @@
+﻿@using System.Configuration;
+
+@{
+    string appHome = String.Format("{0} Home", ConfigurationManager.AppSettings["AppType"]);
+}
+
+@(Html.Kendo().Menu()
+            .Name("UserMenu")
+            .Animation(animation =>
+            {
+                animation.Open(open =>
+                {
+                    open.Fade(FadeDirection.In);
+                });
+            })
+            .HoverDelay(200)
+            .Items(items =>
+            {
+                items.Add()
+                    .Text(User.Identity.Name)
+                    .Items(children =>
+                    {
+                        children.Add().Text("Profile").HtmlAttributes(new { id = "PROFILE" });
+                        children.Add().Text("Theme").HtmlAttributes(new { id = "THEME" })
+                            .Items(subchildren =>
+                            {
+                                subchildren.Add().Text("Black").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("BlueOpal").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Bootstrap").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Default").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Flat").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Fiori").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("HighContrast").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Metro").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("MetroBlack").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Moonlight").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Nova").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Silver").HtmlAttributes(new { id = "THEME" });
+                                subchildren.Add().Text("Uniform").HtmlAttributes(new { id = "THEME" });
+                            });
+
+                        children.Add().Text(appHome).HtmlAttributes(new { id = "IDA-HOME", style = "font-weight: bold; border-top: inset ; border-top-width: 1px;" });
+
+                    });
+            })
+            .Events(e => e.Select("ida.core.userMenuSelect"))
+)
